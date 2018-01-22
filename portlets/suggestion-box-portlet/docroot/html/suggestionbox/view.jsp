@@ -59,19 +59,22 @@
 			</c:if>
 
 			<liferay-ui:search-container iteratorURL="<%=portletURL%>" emptyResultsMessage="no-suggestions" orderByCol="<%=orderByCol%>" orderByType="<%=orderByType%>" >
-				<liferay-ui:search-container-results
-					results="<%=SuggestionLocalServiceUtil
-									.getSuggestionsByUserIdAndGroupId(
-										themeDisplay.getCompanyId(),
-										themeDisplay.getUserId(),
-										themeDisplay.getScopeGroupId(),
-										searchContainer.getStart(), 
-										searchContainer.getEnd(),
-										orderByType,
-										orderByCol)%>"
-					total="<%=SuggestionLocalServiceUtil
-									.getSuggestionsCount()%>" />
-	
+				<%
+                    List<Suggestion> suggestions =
+                            SuggestionLocalServiceUtil.getSuggestionsByUserIdAndGroupId(
+                                    themeDisplay.getCompanyId(),
+                                    themeDisplay.getUserId(),
+                                    themeDisplay.getScopeGroupId(),
+                                    searchContainer.getStart(),
+                                    searchContainer.getEnd(),
+                                    orderByType,
+                                    orderByCol);
+				%>
+
+                <liferay-ui:search-container-results
+					results = "<%= suggestions %>"
+					total="<%= suggestions.size() %>" />
+
 				<liferay-ui:search-container-row
 					className="com.rivetlogic.suggestionbox.model.Suggestion"
 					keyProperty="suggestionId" modelVar="suggestion">
@@ -94,25 +97,26 @@
 						<portlet:param name="redirect" value="<%=redirect%>" />
 					</portlet:renderURL>
 
-					<liferay-ui:search-container-column-text name="createDate"  orderable="true"  
+					<liferay-ui:search-container-column-text name="createDate"  orderable="true"
 						value="<%=  df.format(suggestion.getCreateDate()) %>"
 						href="${editSuggestionURL}" />
-	
+
 					<liferay-ui:search-container-column-text property="category" orderable="true"
 						href="${editSuggestionURL}" />
-	
+
 					<liferay-ui:search-container-column-text href="${editSuggestionURL}" orderable="true"
 						property="title" />
-	
+
 					<liferay-ui:search-container-column-text property="status" orderable="true"
 						href="${editSuggestionURL}" />
-	
+
 					<liferay-ui:search-container-column-jsp align="right"
 						path="/html/suggestionbox/edit_actions.jsp" />
-	
+
 				</liferay-ui:search-container-row>
-	
-				<liferay-ui:search-iterator/>
+
+				<liferay-ui:search-iterator paginate="true"/>
+
 			</liferay-ui:search-container>
 
 		</c:if>
@@ -121,17 +125,20 @@
 	<liferay-ui:section>
 		<c:if test='<%="all-suggestions".equals(tabs1)%>'>
 			<liferay-ui:search-container iteratorURL="<%=portletURL%>" emptyResultsMessage="no-suggestions" orderByCol="<%=orderByCol%>" orderByType="<%=orderByType%>" >
-				<liferay-ui:search-container-results
-					results="<%=SuggestionLocalServiceUtil
-							.getSuggestionsByCompanyIdAndGroupId(
-									themeDisplay.getCompanyId(),
-									themeDisplay.getScopeGroupId(),
-									searchContainer.getStart(),
-									searchContainer.getEnd(),
-									orderByType,
-									orderByCol)%>"
-					total="<%=SuggestionLocalServiceUtil
-									.getSuggestionsCount()%>" />
+                <%
+                    List<Suggestion> suggestions =
+                            SuggestionLocalServiceUtil.getSuggestionsByCompanyIdAndGroupId(
+                            themeDisplay.getCompanyId(),
+                            themeDisplay.getScopeGroupId(),
+                            searchContainer.getStart(),
+                            searchContainer.getEnd(),
+                            orderByType,
+                            orderByCol);
+
+                %>
+                <liferay-ui:search-container-results
+                    results = "<%= suggestions %>"
+                    total="<%= suggestions.size() %>" />
 	
 				<liferay-ui:search-container-row
 					className="com.rivetlogic.suggestionbox.model.Suggestion"
